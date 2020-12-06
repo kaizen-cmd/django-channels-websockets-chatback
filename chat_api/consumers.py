@@ -45,9 +45,9 @@ class PublicChatConsumer(WebsocketConsumer):
         message = event["message"]
         name = event["name"]
         self.send(text_data=json.dumps(
-            {"message": message, "name": name))
+            {"message": message, "name": name}))
 
     def online_count(self, event):
 
         count = event["count"]
-        self.send(text_data=json.dumps({"count": counter}))
+        self.send(text_data=json.dumps({"count": count}))
