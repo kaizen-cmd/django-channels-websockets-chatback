@@ -1,0 +1,15 @@
+<h1 id="apple"></h1>
+<input type="text">
+
+<button onclick="sender()">Send</button>
+
+<script>
+    const ws = new WebSocket("ws://127.0.0.1:8000");
+    const sender = () => {
+        ws.send(JSON.stringify({message: "Hello World"}))
+    }
+    ws.onmessage = (e) => {
+        var inner = document.getElementById("apple").innerText;
+        document.getElementById("apple").innerText = inner + JSON.parse(e.data).message;
+    }
+</script>
