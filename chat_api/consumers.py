@@ -3,22 +3,24 @@ import json
 from asgiref.sync import async_to_sync
 from chat_api.models import Message
 
+counter = 0
 
 class PublicChatConsumer(WebsocketConsumer):
 
-    counter = 0
 
     def connect(self):
         async_to_sync(self.channel_layer.group_add)(
             "abc",
             self.channel_name
         )
-        self.counter += 1
+        global counter
+        counter += 1
         self.accept()
-        self.send(json.dumps({"count": self.counter}))
+        self.send(json.dumps({"count": counter}))
 
     def disconnect(self, close_code):
-        self.counter += 1
+        global counter
+        counter -= 1
         async_to_sync(self.channel_layer.group_discard)(
             "abc", self.channel_name)
 
@@ -39,4 +41,4 @@ class PublicChatConsumer(WebsocketConsumer):
         message = event["message"]
         name = event["name"]
         self.send(text_data=json.dumps(
-            {"message": message, "name": name}))
+            {"message": message, "name": name, "count": counter}))
