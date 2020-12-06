@@ -5,8 +5,8 @@ from chat_api.models import Message
 
 counter = 0
 
-class PublicChatConsumer(WebsocketConsumer):
 
+class PublicChatConsumer(WebsocketConsumer):
 
     def connect(self):
         async_to_sync(self.channel_layer.group_add)(
@@ -16,7 +16,11 @@ class PublicChatConsumer(WebsocketConsumer):
         global counter
         counter += 1
         self.accept()
-        self.send(json.dumps({"count": counter}))
+        context = {
+            "type": "online_count",
+            "count": counter
+        }
+        async_to_sync(self.channel_layer.group_send)("abc", context)
 
     def disconnect(self, close_code):
         global counter
@@ -41,4 +45,9 @@ class PublicChatConsumer(WebsocketConsumer):
         message = event["message"]
         name = event["name"]
         self.send(text_data=json.dumps(
-            {"message": message, "name": name, "count": counter}))
+            {"message": message, "name": name}))
+
+    def online_count(self, event):
+
+        count = event["count"]
+        self.send(text_data=json.dumps({"count": count}))
