@@ -25,6 +25,11 @@ class PublicChatConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         global counter
         counter -= 1
+        context = {
+            "type": "online_count",
+            "count": counter
+        }
+        async_to_sync(self.channel_layer.group_send)("abc", context)
         async_to_sync(self.channel_layer.group_discard)(
             "abc", self.channel_name)
 
