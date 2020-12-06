@@ -1,6 +1,7 @@
 from channels.generic.websocket import WebsocketConsumer
 import json
 from asgiref.sync import async_to_sync
+from chat_api.models import Message
 
 
 class PublicChatConsumer(WebsocketConsumer):
@@ -12,7 +13,7 @@ class PublicChatConsumer(WebsocketConsumer):
         )
         self.accept()
 
-    def disconnect(self):
+    def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)(
             "abc", self.channel_name)
 
@@ -26,6 +27,7 @@ class PublicChatConsumer(WebsocketConsumer):
             "name": name
         }
         async_to_sync(self.channel_layer.group_send)("abc", context)
+        Message.objects.create(name=name, message=message)
 
     def chat_message(self, event):
 
