@@ -1,9 +1,12 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 from chat_api.models import Message
+from chat_api.serilaizers import MessageSerilaizer
+from rest_framework.pagination import PageNumberPagination
 
-@api_view(["GET"])
-def get_logs(request):
-    objs = Message.objects.all()
-    msgs = [{"message": i.message, "name": i.name} for i in objs]
-    return Response(msgs)
+
+class ChatLogsView(ListAPIView):
+    queryset = Message.objects.all().order_by("-timestamp")
+    serializer_class = MessageSerilaizer
+    pagination_class = PageNumberPagination
+
+

@@ -18,7 +18,7 @@ class PublicChatConsumer(WebsocketConsumer):
         self.accept()
         context = {
             "type": "online_count",
-            "count": counter
+            "counter": counter
         }
         async_to_sync(self.channel_layer.group_send)("abc", context)
 
@@ -27,7 +27,7 @@ class PublicChatConsumer(WebsocketConsumer):
         counter -= 1
         context = {
             "type": "online_count",
-            "count": counter
+            "counter": counter
         }
         async_to_sync(self.channel_layer.group_send)("abc", context)
         async_to_sync(self.channel_layer.group_discard)(
@@ -54,5 +54,5 @@ class PublicChatConsumer(WebsocketConsumer):
 
     def online_count(self, event):
 
-        count = event["count"]
-        self.send(text_data=json.dumps({"count": count}))
+        count = event["counter"]
+        self.send(text_data=json.dumps({"counter": count}))
