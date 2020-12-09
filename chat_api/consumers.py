@@ -58,7 +58,7 @@ class PublicChatConsumer(WebsocketConsumer):
         if message == "100pnotify":
             online_users[self.scope["client"][1]] = name
         else:
-            Message.objects.create(name, message=message)
+            Message.objects.create(name=name, message=message)
 
     def chat_message(self, event):
 
