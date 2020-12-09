@@ -1,5 +1,5 @@
 from django.contrib import admin
-from chat_api.models import Message
+from chat_api.models import Message, TrendingTopics
 # Register your models here.
 
-admin.site.register([Message])
+admin.site.register([Message, TrendingTopics])
